@@ -5,35 +5,30 @@ const multer = require('multer');
 const path = require('path');
 
 const { router } = require('./routes/login');
+const { suRouter } = require('./routes/singleUpload')
 const { readFilePromise, writeFilePromise } = require('./file-utils');
 
-const storage = multer.diskStorage({
+require('dotenv').config();
+const port = process.env.PORT || 3001;
+
+const storageSingleUpload = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'info');
     },
     filename: (req, file, cb) => {
-        console.log('file: ' + file);
         cb(null, file.originalname);
     }
 });
 
 const upload = multer({
-    storage: storage
+    storage: storageSingleUpload
 });
 
 
-require('dotenv').config();
-const port = process.env.PORT || 3001;
-
 app.use(express.json());
 
-// app.get('/', (req, res) => {
-//     res.setHeader('Content-Type', 'text/html');
-//     // res.send("Hello world!");
-//     res.end('<p>zadara</p>');
-// });
-
 app.use('/', router);
+app.use('/', suRouter);
 
 app.get('/', async(req, res) => {
     try {
@@ -49,18 +44,29 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/', upload.array('file-to-upload', 10), (req, res) => {
-    if (req.files) {
-        const uploadedFiles = req.files;
+app.post('/', upload.single('file-to-upload'), (req, res) => {
+    if (req.file) {
         // res.redirect('/');
+        // const uploadedFile = req.file;
         res.status(200).json({
-            files: req.files
+            file: req.file
         });
     } else {
         res.status(500).json({ error: "No such a file" });
     }
-    // res.redirect('/');
 });
+
+// app.post('/', upload.array('file-to-upload', 10), (req, res) => {
+//     // res.redirect('/');
+//     if (req.files) {
+//         const uploadedFiles = req.files;
+//         res.status(200).json({
+//             files: req.files
+//         });
+//     } else {
+//         res.status(500).json({ error: "No such a file" });
+//     }
+// });
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}!`);

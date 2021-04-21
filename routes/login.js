@@ -4,7 +4,7 @@ const { readFilePromise, writeFilePromise } = require('../file-utils');
 
 const router = express.Router();
 
-router.get('/login', async(req, res) => {
+router.get('/upload', async(req, res) => {
     try {
         const result = await readFilePromise('./login.html');
         console.log(result);
