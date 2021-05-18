@@ -1,11 +1,8 @@
 const express = require('express');
-const fs = require('fs');
 const app = express();
 const multer = require('multer');
-const path = require('path');
 
 const { router } = require('./routes/login');
-const { suRouter } = require('./routes/singleUpload')
 const { readFilePromise, writeFilePromise } = require('./file-utils');
 
 require('dotenv').config();
