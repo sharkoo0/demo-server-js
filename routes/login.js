@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/upload', async(req, res) => {
     try {
-        const result = await readFilePromise('./login.html');
+        const result = await readFilePromise('../login.html');
         console.log(result);
         res.send(result);
     } catch (error) {
