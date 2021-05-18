@@ -28,7 +28,6 @@ const upload = multer({
 app.use(express.json());
 
 app.use('/', router);
-app.use('/', suRouter);
 
 app.get('/', async(req, res) => {
     try {
@@ -40,15 +39,10 @@ app.get('/', async(req, res) => {
     }
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-});
-
+//===Upload a single file===
 app.post('/', upload.single('file-to-upload'), (req, res) => {
     if (req.file) {
-        // res.redirect('/');
-        // const uploadedFile = req.file;
-        res.status(200).json({
+        res.status(200).json({  
             file: req.file
         });
     } else {
@@ -56,6 +50,7 @@ app.post('/', upload.single('file-to-upload'), (req, res) => {
     }
 });
 
+//===Upload multiple files===
 // app.post('/', upload.array('file-to-upload', 10), (req, res) => {
 //     // res.redirect('/');
 //     if (req.files) {
